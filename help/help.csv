@@ -1,0 +1,11 @@
+command,usage,purpose
+do,do <backup/system-upgrades/manage-script-upgrade/service-status/list_course_ids/lms_asset_compile>,Runs certain commands such as Backup
+do refresh, do refresh <firewall-rules/openedx-config>,Used for refreshing certain configurations, such as Firewall rules
+restart,restart <forum/mongodb/ssh/nginx/denyhosts/mysql/nginx/all/edxapp/edxapp-workers/analytics-api/certs/ecommerce/ecommerce_workers/insights/notifier-celery-workers/notifier-schedule/programs/xqueue/xqueue_consumer/rabbitmq>,Restarts various services
+user,Not implemented yet,This will be used to handle various user tasks, such as adding and removing users to OpenEdX
+mysql,Not implemented yet,This will be used to handle various tasks related to MySQL
+about,about,Prints an about message
+run-ansible-playbook,run-ansible-playbook <Role>,Runs a role using Ansible
+generate-random-pass,generate-random-pass,Generates a random password
+check-process,check-process <mysql/rabbitmq>,Checks to see if a process is running
+delete_course,delete_course <courseid>,Deletes a course - make sure to run do list_course_ids first
