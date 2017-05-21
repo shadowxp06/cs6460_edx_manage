@@ -1,13 +1,16 @@
 #
-# Last Updated: 04/21/2017 10:17 PM/EST
+# Last Updated: 05/16/2017 8:55 PM/EST
 #
 header = "(CS6460 Open EdX) "
 edx_backup_loc = "/edx/backup/"
+edx_logs_loc = "/edx/var/log"
+logs_loc = "/var/log"
 mongodb_port = "45172"
 mysql_db_backup_user = "root"
 
 # Logging Constants
 mgmt_system_log = "system.log"
+maintenance_log = "maintenance.log"
 help_csv = "help.csv"
 msg_for_more_help = "For more help, try manage.py help <command>"
 not_implemented_message = "Command or option not implemented"
@@ -29,7 +32,7 @@ restart = "Restart"
 restart_log = "has restarted service :"
 experimental = "This feature or command is currently marked as Experimental, \n if you still wish to run it, add _experimental to the command that you are trying to run"
 script_not_found = "Script not found -- it is recommended that you do a git fetch --all"
-command_not_found = "Command not found -- use -help for more information"
+command_not_found = "Command not found -- use help for more information"
 option_not_found = "Option not found or supported"
 
 # OpenEdX
@@ -47,7 +50,7 @@ openedx_remove_course = "Remove course"
 openedx_backup_nag = "Make sure you run manage.py do backup before running this command"
 openedx_compile_assets = "Compiling Assets"
 openedx_compile_assets_lms_log = "has re-compiled the LMS Assets"
-openedx_user_add_invalidemail = "Invalid Email Provided"
+openedx_user_invalidemail = "Invalid Email Provided"
 openedx_run_playbook = " has run the playbook: "
 
 #System_Updates
@@ -61,6 +64,7 @@ system_updates_run_upgrades_unsuccessful = "has run Run Upgrades Successfully"
 #Refresh
 refresh_log = "has run do refresh"
 refresh_openedx = "Refreshing OpenEdX Configuration"
+refresh_firewall_rules = "Refreshing Firewall Rules"
 
 #Search
 begin_search = "Beginning search"
@@ -73,6 +77,10 @@ backup_log_complete = "Backup is done - you can find it in: "
 #Manage.py
 management_script_upgrade = "Starting Update for Manage.py"
 management_script_upgrade_log = "has run Management Script Upgrade"
+open_edx_logs_backup = "Starting Open EdX Logs Backup"
+open_edx_logs_backup_log = "has run Open EdX Log Backup"
+logs_backup = "Starting Log Backup"
+logs_backup_log = "has run Logs Backup"
 
 #Netstat
 netstat = "Netstat -anltp"
@@ -89,7 +97,17 @@ supervisor_log = "has run the supervisor command :"
 #User
 add_edx_user = "Adding a EdX Superuser"
 add_edx_user_log = "has added a new superuser to EdX :"
+del_edx_user = "Deleting a EdX User"
+del_edx_user_log = "has deleted a user from EdX :"
+change_password_edx_user = "Changing a user password for Open EdX"
+change_password_edx_user_log = "has changed the password for:"
 
+#Maintenance
+maintenance_start = "Maintenance is starting"
+maintenance_end = "Maintenance is ending"
+maintenance_end_warn1 = "Do not forget to copy the DB Backups and reboot the machine"
+maintenance_end_warn2 = "Once the machine reboots, run /gt/manage.py do refresh firewall_rules"
+maintenance_error = "Please start maintenance before running this command"
 
 #Check_Process
 def process_is_running(procname, is_running):

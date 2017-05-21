@@ -1,5 +1,5 @@
 #
-# Last Updated: 04/15/2017 9:39 PM/EST
+# Last Updated: 05/16/2017 8:57 PM/EST
 #
 
 import os
@@ -7,35 +7,12 @@ import Constants
 import errno
 import getpass
 from time import gmtime, strftime
-import shutil
 import MiscUtils
 import subprocess
 import string
 import Supervisor
+import random, string
 from validate_email import validate_email
-
-
-def do_backup():
-    print(Constants.header + " " + Constants.backup_log)
-    if check_for_backup_dir():
-        cur_logtime = get_logtime_format()
-        os.system("mongodump -h 127.0.0.1:" + Constants.mongodb_port + " -o " + get_backup_dir() + cur_logtime + "_mongo-backup")
-        os.system("mongodump -h 127.0.0.1:" + Constants.mongodb_port + " -o " + Constants.edx_backup_loc)
-        os.system("mysqldump -u " + Constants.mysql_db_backup_user + " -p --all-databases > " + get_backup_dir() + cur_logtime + "_mongo-backup/" + cur_logtime + "_mysql-backup.sql")
-        shutil.make_archive(get_logtime_format(), "zip", get_backup_dir() + cur_logtime + "_mongo-backup")
-        os.system("rm -rf " + get_backup_dir() + cur_logtime + "_mongo-backup")
-    print(Constants.header + " " + Constants.backup_log_complete + get_backup_dir())
-
-
-def do_management_script_update():
-    print(Constants.header + " " + Constants.management_script_upgrade)
-    os.system("git config --global credential.helper \"cache --timeout=3600\"")
-    os.system("cd " + get_python_dir() + " && sudo git reset --hard HEAD")
-    os.system("cd " + get_python_dir() + " && sudo git clean -f")
-    os.system("cd " + get_python_dir() + " && sudo git pull")
-    print(Constants.header + Constants.done)
-    MiscUtils.write_to_log(Constants.mgmt_system_log,
-                           MiscUtils.get_current_user() + " " + Constants.management_script_upgrade_log)
 
 
 #TODO: Move this into it's own Course command
@@ -118,6 +95,31 @@ def check_for_log_dir():
             if exception.errno != errno.EEXIST:
                 raise
 
+#TODO: make htis actually check for the Logs backup directory
+def check_for_backup_log_dir():
+    if os.path.exists(get_log_dir()):
+        return True
+    else:
+        try:
+            os.makedirs(get_log_dir())
+            return check_for_log_dir()  # This may fail if the user is not root when running backup
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise
+
+
+#TODO: make this actually check for the Logs backup directory
+def check_for_backup_db_dir():
+    if os.path.exists(get_log_dir()):
+        return True
+    else:
+        try:
+            os.makedirs(get_log_dir())
+            return check_for_log_dir()  # This may fail if the user is not root when running backup
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise
+
 
 def get_logtime_format(): #See http://stackoverflow.com/questions/415511/how-to-get-current-time-in-python for this particular bit of code
     return strftime("%m%d%Y_%H%M%S", gmtime())
@@ -166,3 +168,12 @@ def check_for_process(processname):
 #See http://stackoverflow.com/questions/8022530/python-check-for-valid-email-address
 def isValidEmail(userEmail):
     return  validate_email(userEmail)
+
+
+#Code from http://stackoverflow.com/questions/7479442/high-quality-simple-random-password-generator
+def generate_random_pass():
+    length = 13
+    chars = string.ascii_letters + string.digits + '!@#$%^&*()+-_[]'
+
+    rnd = random.SystemRandom()
+    print ''.join(rnd.choice(chars) for i in range(length))

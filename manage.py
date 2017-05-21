@@ -1,14 +1,12 @@
 #!/usr/bin/python
 #
-# Last Updated: 04/15/2017 4:46 PM/EST
-#
 
 import sys
 import shell_functions
 import Constants
 import help
 
-lastrevision = "04/15/2017 4:46 PM/EST"
+lastrevision = "05/20/2017 11:05 AM/EST"
 
 # Get the total number of args passed to the demo.py
 total = len(sys.argv)
@@ -36,7 +34,7 @@ if total > 1:
             svc.do_command()
         else:
             print(Constants.option_not_found)
-    elif firstArg == "run-ansible-playbook":
+    elif firstArg == "run_ansible_playbook":
         total_second = len(sys.argv)
         if total_second > 2:
             secondArg = sys.argv[2]
@@ -56,9 +54,8 @@ if total > 1:
             csv.list_all()
     elif firstArg == "mysql":
         print(Constants.not_implemented_message)
-    elif firstArg == "generate-random-pass":
-        svc = shell_functions.Shell_Script(shell_functions.get_script_dir(), "generate_random_pass.sh")
-        print(svc.run_script())
+    elif firstArg == "generate_random_pass": #TODO: Remove support for generate-random-pass
+        print(shell_functions.generate_random_pass()) #Code for this method not coded by me -- see http://stackoverflow.com/questions/7479442/high-quality-simple-random-password-generator
     elif firstArg == "about":
         print("-- GT Manage.py --")
         print("version 1.0 - Last Revision: " + lastrevision)

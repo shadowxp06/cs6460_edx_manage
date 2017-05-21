@@ -1,11 +1,16 @@
 command,usage,purpose
-do,do <backup/system-upgrades/manage-script-upgrade/service-status/list_course_ids/lms_asset_compile>,Runs certain commands such as Backup
+do,do <manage_script_upgrade/service_status/list_course_ids/lms_asset_compile/maintenance>,Runs certain commands such as Backup
 do refresh, do refresh <firewall-rules/openedx-config>,Used for refreshing certain configurations, such as Firewall rules
+do maintenance, do maintenance <start/end/run/db_backup/logs_backup/system_upgrades>,Used for running various maintenance tasks
 restart,restart <forum/mongodb/ssh/nginx/denyhosts/mysql/nginx/all/edxapp/edxapp-workers/analytics-api/certs/ecommerce/ecommerce_workers/insights/notifier-celery-workers/notifier-schedule/programs/xqueue/xqueue_consumer/rabbitmq>,Restarts various services
-user,Not implemented yet,This will be used to handle various user tasks, such as adding and removing users to OpenEdX
-mysql,Not implemented yet,This will be used to handle various tasks related to MySQL
+user,user <add_edx_superuser/add_edx_user/add_edx_staff/change_password/delete_edx_user>,Handles various user tasks
+user add_edx_superuser,user add_edx_superuser <username> <email>,Adds a user as super user (This includes the staff flag)
+user add_edx_staff,user add_edx_staff <username> <email>,Adds a user as staff
+user add_edx_user,user add_edx_user <username> <email>,Adds a user as normal user or student
+user del_edx_user,user del_edx_user <username>,Deletes a user
+user change_password,user change_password <username>,Changes a users password
 about,about,Prints an about message
-run-ansible-playbook,run-ansible-playbook <Role>,Runs a role using Ansible
-generate-random-pass,generate-random-pass,Generates a random password
+run_ansible_playbook,run_ansible_playbook <Role>,Runs a role using Ansible
+generate_random-pass,generate_random_pass,Generates a random password
 check-process,check-process <mysql/rabbitmq>,Checks to see if a process is running
 delete_course,delete_course <courseid>,Deletes a course - make sure to run do list_course_ids first

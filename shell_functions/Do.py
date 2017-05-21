@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Last Updated: 04/15/2017 4:46 PM/EST
+# Last Updated: 05/16/2017 8:55 PM/EST
 #
 import Constants
 import shell_functions
@@ -29,9 +29,7 @@ class Do(object):
 
     def do_command(self):
         self.totalArgs = len(self.args)
-        if self.command == 'backup':
-            shell_functions.do_backup()
-        elif self.command == 'openedx_upgrade':
+        if self.command == 'openedx_upgrade':
             print(Constants.experimental)
         elif self.command == 'openedx_upgrade_experimental':
             if self.totalArgs > 2:
@@ -44,13 +42,11 @@ class Do(object):
                                        MiscUtils.get_current_user() + " " + Constants.upgrade_openedx_log_message)
             else:
                 print(Constants.option_not_found)
-        elif self.command == 'system_upgrades':
-            su = shell_functions.System_Updates(True, True)  # Mark the package and run upgrades
-            su.run_all()
         elif self.command == 'manage_script_upgrade':
-            shell_functions.do_management_script_update()
+            su = shell_functions.Maintenance()
+            su.run_management_script_update()
         elif self.command == 'service_status':
-            sv = shell_functions.Supervisor("status")
+            sv = shell_functions.Supervisor.Supervisor("status")
             print(sv.run())
         elif self.command == 'refresh':
             if self.totalArgs > 3:
@@ -71,17 +67,48 @@ class Do(object):
             if self.totalArgs > 2:
                 MiscUtils.do_list_course_ids()
         elif self.command == 'lms_asset_compile':
-            MiscUtils.do_lms_asset_recompile()
+            MiscUtils.do_lms_asset_recompile() #TODO: Fix for GT VM
+        elif self.command == 'maintenance':
+            if self.totalArgs > 3:
+                self.maintenance_command()
+                MiscUtils.write_to_log(Constants.mgmt_system_log, MiscUtils.get_current_user() + " has run the maintenance command: " + self.args[3])
+        else:
+            print(Constants.command_not_found)
+
+
+    def maintenance_command(self):
+        su = shell_functions.Maintenance()
+        if self.args[3] == 'backup':
+            su.run_db_backup()
+        elif self.args[3] == 'start':
+            print(Constants.header + " " + Constants.maintenance_start)
+            su.start_maintenance()
+        elif self.args[3] == 'end':
+            print(Constants.header + " " + Constants.maintenance_end)
+            su.end_maintenance()
+        elif self.args[3] == 'run':
+            su.run_normal_maintenance()
+        elif self.args[3] == 'db_backup':
+            su.run_db_backup()
+        elif self.args[3] == 'logs_backup':
+            su.run_edx_logs_backup()
+            su.run_logs_backup()
+        elif self.args[3] == 'system_upgrades':
+            su.run_system_upgrades()
         else:
             print(Constants.command_not_found)
 
     def refresh_command(self):
         if self.args[3] == 'firewall_rules':
+            print(Constants.header + " " + Constants.refresh_firewall_rules)
             su = shell_functions.Shell_Script(shell_functions.get_script_dir(), "firewall_rules.sh")
             su.run_script()
+            print(Constants.header + " " + Constants.done)
         elif self.args[3] == 'openedx_config':
             print(Constants.header + " " + Constants.refresh_openedx)
             self.openedx_upgrade_stage2(self, 'false')
+            print(Constants.header + " " + Constants.done)
+            MiscUtils.write_to_log(Constants.mgmt_system_log, MiscUtils.get_current_user() + " has refreshed the Open EdX Configuration")
         else:
             print(Constants.option_not_found)
 
@@ -97,7 +124,7 @@ class Do(object):
         os.system("sudo /edx/bin/update read-only-certificate-code " + self.release)
         os.system("sudo /edx/bin/update edx-analytics-data-api " + self.release)
         #os.system("sudo /edx/bin/update edx-ora2 " + self.release)
-        os.system("sudo /edx/bin/update insights " + self.release)
+        #os.system("sudo /edx/bin/update insights " + self.release)
         os.system("sudo /edx/bin/update ecommerce " + self.release)
         os.system("sudo /edx/bin/update course_discovery " + self.release)
         os.system("sudo /edx/bin/update notifier " + self.release)

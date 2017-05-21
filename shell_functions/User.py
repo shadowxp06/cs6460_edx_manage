@@ -44,13 +44,19 @@ class User(object):
                                    MiscUtils.get_current_user() + " " + Constants.add_edx_user_log + " " + self.args[
                                        3] + " " + self.args[4])
         elif self.command == "delete_edx_user":
-            print(Constants.not_implemented_message)
+            print(Constants.header + Constants.del_edx_user)
+            self.del_user(self.args[3], self.args[4])
+            print(Constants.header + Constants.done)
+            MiscUtils.write_to_log(Constants.mgmt_system_log, MiscUtils.get_current_user() + " " + Constants.del_edx_user_log + " " + self.args[3]  + " " + self.args[4])
         elif self.command == "change_password":
-            print(Constants.not_implemented_message)
+            print(Constants.header + Constants.change_password_edx_user)
+            self.change_password(self.args[3])
+            print(Constants.header + Constants.done)
+            MiscUtils.write_to_log(Constants.mgmt_system_log, MiscUtils.get_current_user() + " " + Constants.change_password_edx_user_log + " " + self.args[3])
         else:
             print(Constants.command_not_found)
 
-    def add_user(self,username, email, isStaff, isSuperUser):
+    def add_user(self, username, email, isStaff, isSuperUser):
         cmd = "sudo /edx/bin/python.edxapp /edx/bin/manage.edxapp lms manage " + username + " " + email
 
         if isStaff:
@@ -64,4 +70,16 @@ class User(object):
         if MiscUtils.isValidEmail(email):
             os.system(cmd)
         else:
-            print(Constants.openedx_user_add_invalidemail)
+            print(Constants.openedx_user_invalidemail)
+
+    def del_user(self, username, email):
+        cmd = "sudo /edx/bin/python.edxapp /edx/bin/manage.edxapp lms manage_user " + username + " " + email + " --settings=aws"
+
+        if MiscUtils.isValidEmail(email):
+            os.system(cmd)
+        else:
+            print(Constants.openedx_user_invalidemail)
+
+    def change_password(self, username):
+        cmd = "sudo -u www-data /edx/bin/python.edxapp /edx/bin/manage.edxapp lms changepassword " + username + " --settings=aws"
+        os.system(cmd)
